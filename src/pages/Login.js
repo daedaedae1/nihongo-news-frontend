@@ -13,7 +13,7 @@ function Login() {
         <div>
             <form onSubmit={async (event) => {
                 event.preventDefault();
-                const response = await fetch('/api/login', {
+                const response = await fetch('http://localhost:8080/api/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ function Login() {
                     body: JSON.stringify({
                         userid: userid,
                         password: pwd
-                    })
+                    }),
                 });
                 if (response.ok) {
                     alert('로그인 성공!');
