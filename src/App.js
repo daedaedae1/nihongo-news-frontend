@@ -5,7 +5,7 @@ import Signup from './pages/Signup';
 
 import NavBar from './components/NavBar';
 
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 

@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-    const User = {
-        email: 'abc@naver.com',
-        pw: 'qwe123'
-    };
+
+    const navigate = useNavigate();
+
     const [userid, setUserid] = useState('');
     const [pwd, setPwd] = useState('');
 
@@ -23,10 +22,12 @@ function Login() {
                         password: pwd
                     }),
                 });
+                const messageData = await response.json();
                 if (response.ok) {
-                    alert('로그인 성공!');
+                    alert(messageData.success);
+                    navigate('/');
                 } else {
-                    alert('로그인 실패!');
+                    alert(messageData.error);
                 }
             }}>
                 <p>id <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>

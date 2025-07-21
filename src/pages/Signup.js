@@ -7,6 +7,7 @@ function Signup() {
 
     const [userid, setUserid] = useState('');
     const [pwd, setPwd] = useState('');
+    const [name, setName] = useState('');
 
     return (
         <div>
@@ -19,19 +20,22 @@ function Signup() {
                     },
                     body: JSON.stringify({
                         userid: userid,
-                        password: pwd
+                        password: pwd,
+                        name: name
                     }),
                 });
+                const messageData = await response.json();
                 if (response.ok) {
-                    alert('회원가입 성공!');
+                    alert(messageData.success);
                     navigate('/login');
                 } else {
-                    alert('회원가입 실패!');
+                    alert(messageData.error);
                 }
             }}>
-                <p>id <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
+                <p>name <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/></p>
+                <p>userid <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
                 <p>pwd <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
-                <p><input type="submit" value="로그인"></input></p>
+                <p><input type="submit" value="회원가입"></input></p>
             </form>
         </div>
     );
