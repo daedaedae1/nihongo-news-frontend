@@ -14,7 +14,7 @@ function NavBar() {
               <Link className="nav-link" to="/login">Login</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/about">About</Link>
+              <Link className="nav-link" to="/signup">Signup</Link>
             </li>
             {/* 추가 메뉴도 이런 식으로 */}
           </ul>
