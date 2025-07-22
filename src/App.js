@@ -6,13 +6,27 @@ import Signup from './pages/Signup';
 import NavBar from './components/NavBar';
 
 import { Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/dare', {
+      method: 'POST',
+      credentials: "include"
+    })
+    .then(response => response.ok? response.json() : null)
+    .then(data => {
+      if(data) setUserInfo(data);
+    });
+  }, []);
+
   return (
     <>
-      <NavBar></NavBar>
+      <NavBar userInfo={userInfo}></NavBar>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />

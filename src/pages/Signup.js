@@ -8,6 +8,7 @@ function Signup() {
     const [userid, setUserid] = useState('');
     const [pwd, setPwd] = useState('');
     const [name, setName] = useState('');
+    const [nickname, setNickname] = useState('');
 
     return (
         <div>
@@ -19,9 +20,10 @@ function Signup() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        name: name,
+                        nickname: nickname,
                         userid: userid,
-                        password: pwd,
-                        name: name
+                        password: pwd
                     }),
                 });
                 const messageData = await response.json();
@@ -33,6 +35,7 @@ function Signup() {
                 }
             }}>
                 <p>name <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/></p>
+                <p>nickname <input type="text" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)} /></p>
                 <p>userid <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
                 <p>pwd <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
                 <p><input type="submit" value="회원가입"></input></p>
