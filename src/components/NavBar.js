@@ -3,7 +3,7 @@ import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { RiLogoutBoxLine } from "react-icons/ri";
 
 
-function NavBar({userInfo}) {
+function NavBar({ userInfo }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">

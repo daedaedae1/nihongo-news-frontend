@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ setUserInfo }) {
 
     const navigate = useNavigate();
 
@@ -23,12 +23,13 @@ function Login() {
                         password: pwd
                     }),
                 });
-                const messageData = await response.json();
+                const data = await response.json();
                 if (response.ok) {
-                    alert(messageData.success);
+                    alert(data.success);
+                    setUserInfo(data);
                     navigate('/');
                 } else {
-                    alert(messageData.error);
+                    alert(data.error);
                 }
             }}>
                 <p>id <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
