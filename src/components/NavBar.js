@@ -7,7 +7,7 @@ function NavBar({ userInfo }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">MyApp</Link>
+        <Link className="navbar-brand fw-bold" to="/">NAN</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -16,7 +16,7 @@ function NavBar({ userInfo }) {
             {userInfo? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/profile">
+                  <Link className="nav-link fw-semibold text-decoration-underline" to="/profile">
                     {userInfo.nickname} 님
                   </Link>
                 </li>
