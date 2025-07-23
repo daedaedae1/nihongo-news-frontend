@@ -1,7 +1,15 @@
-function Home() {
+function Home({ userInfo }) {
   return (
     <div>
-      <h1>홈페이지 입니다.</h1>
+      {userInfo? (
+        <>
+          <h1>로그인된 홈입니다.</h1>
+        </>
+      ) : (
+        <>
+          <h1>홈입니다.</h1>
+        </>
+      )}
     </div>
   );
 }

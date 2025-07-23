@@ -10,6 +10,21 @@ function Signup() {
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
 
+    const [isAvailable, setIsAvailable] = useState(null);
+
+    const handleCheckId = async () => {
+        const response = await fetch('http://localhost:8080/api/check-id?userid=' + encodeURIComponent(userid))
+        const data = await response.json();
+        if(response.ok) {
+            alert(data.success);
+            setIsAvailable(true);
+        }
+        else {
+            alert(data.error);
+            setIsAvailable(false);
+        }
+    }
+
     return (
         <div>
             <form onSubmit={async (event) => {
@@ -36,9 +51,10 @@ function Signup() {
             }}>
                 <p>name <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/></p>
                 <p>nickname <input type="text" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)} /></p>
-                <p>userid <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
+                <p>userid <input type="text" name="id" value={userid} onChange={e => {setUserid(e.target.value); setIsAvailable(null);}}  />
+                          <button type="button" onClick={handleCheckId} disabled={!userid}>중복확인</button></p>
                 <p>pwd <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
-                <p><input type="submit" value="회원가입"></input></p>
+                <p><input type="submit" value="회원가입" disabled={isAvailable !== true}></input></p>
             </form>
         </div>
     );

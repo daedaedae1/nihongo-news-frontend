@@ -30,7 +30,7 @@ function App() {
       <NavBar userInfo={userInfo} setUserInfo={setUserInfo}></NavBar>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home userInfo={userInfo} />} />
           <Route path="/login" element={<Login setUserInfo={setUserInfo} />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} setUserInfo={setUserInfo} />} />
