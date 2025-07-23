@@ -22,7 +22,7 @@ function NavBar({ userInfo }) {
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/logout">
-                    <RiLogoutBoxLine size={20} title="로그아웃" />
+                    <RiLogoutBoxLine size={20} title="로그아웃"/>
                   </Link>
                 </li>
               </>
