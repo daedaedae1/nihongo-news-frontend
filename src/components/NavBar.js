@@ -1,9 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { RiLogoutBoxLine } from "react-icons/ri";
 
 
-function NavBar({ userInfo }) {
+function NavBar({ userInfo, setUserInfo }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await fetch('http://localhost:8080/api/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    setUserInfo(null);
+    navigate('/');
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -21,9 +32,10 @@ function NavBar({ userInfo }) {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/logout">
+                  <button className="nav-link btn btn-link" style={{ cursor: "pointer "}} type="button"
+                          onClick={handleLogout}>
                     <RiLogoutBoxLine size={20} title="로그아웃"/>
-                  </Link>
+                  </button>
                 </li>
               </>
             ) : (

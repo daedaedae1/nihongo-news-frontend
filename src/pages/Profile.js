@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-function Profile() {
-    const [userInfo, setUserInfo] = useState(null);
+function Profile({ userInfo, setUserInfo }) {
 
     useEffect(() => {
         fetch('http://localhost:8080/api/dare', {
@@ -15,7 +14,7 @@ function Profile() {
         .catch(error => {
             console.error('Fetch error', error);
         });
-    }, []);
+    }, [setUserInfo]);
 
     if (!userInfo) 
         return <div>Loading...</div>

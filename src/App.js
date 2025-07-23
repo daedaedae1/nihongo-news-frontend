@@ -27,13 +27,13 @@ function App() {
 
   return (
     <>
-      <NavBar userInfo={userInfo}></NavBar>
+      <NavBar userInfo={userInfo} setUserInfo={setUserInfo}></NavBar>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login setUserInfo={setUserInfo} />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile userInfo={userInfo} setUserInfo={setUserInfo} />} />
         </Routes>
       </div>
     </>
