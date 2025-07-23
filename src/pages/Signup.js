@@ -49,11 +49,11 @@ function Signup() {
                     alert(messageData.error);
                 }
             }}>
-                <p>name <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/></p>
-                <p>nickname <input type="text" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)} /></p>
-                <p>userid <input type="text" name="id" value={userid} onChange={e => {setUserid(e.target.value); setIsAvailable(null);}}  />
+                <p>이름 <input type="text" name="name" value={name} onChange={e => setName(e.target.value)}/></p>
+                <p>닉네임 <input type="text" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)} /></p>
+                <p>아이디 <input type="text" name="id" value={userid} onChange={e => {setUserid(e.target.value); setIsAvailable(null);}}  />
                           <button type="button" onClick={handleCheckId} disabled={!userid}>중복확인</button></p>
-                <p>pwd <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
+                <p>비밀번호 <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
                 <p><input type="submit" value="회원가입" disabled={isAvailable !== true}></input></p>
             </form>
         </div>

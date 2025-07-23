@@ -32,8 +32,8 @@ function Login({ setUserInfo }) {
                     alert(data.error);
                 }
             }}>
-                <p>id <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
-                <p>pwd <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
+                <p>아이디 <input type="text" name="id" value={userid} onChange={e => setUserid(e.target.value)} /></p>
+                <p>비밀번호 <input type="password" name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} /></p>
                 <p><input type="submit" value="로그인"></input></p>
             </form>
         </div>

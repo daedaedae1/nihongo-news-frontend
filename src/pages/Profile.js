@@ -1,6 +1,9 @@
 import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Profile({ userInfo, setUserInfo }) {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch('http://localhost:8080/api/dare', {
@@ -24,7 +27,23 @@ function Profile({ userInfo, setUserInfo }) {
         <p>이름:  <span className="fw-semibold">{userInfo.name}</span></p>
         <p>아이디:  <span className="fw-semibold">{userInfo.userid}</span></p>
         <p><button>비밀번호 변경</button></p>
-        <button>회원탈퇴</button>
+        <button type="button" onClick={ async () => {
+            if(window.confirm("회원을 탈퇴하시겠습니까?")){
+                const response = await fetch('http://localhost:8080/api/delete', {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if(response.ok) {
+                    alert(data.success);
+                    setUserInfo(null);
+                    navigate('/');
+                }
+                else {
+                    alert(data.error);
+                }
+            }
+        }}>회원탈퇴</button>
     </div>
 }
 
