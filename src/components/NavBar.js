@@ -16,7 +16,7 @@ function NavBar({ userInfo, setUserInfo }) {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light " style={{backgroundColor: '#B5D9C9'}} >
       <div className="container-fluid">
         <Link className="navbar-brand fw-bold" to="/">NAN</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
