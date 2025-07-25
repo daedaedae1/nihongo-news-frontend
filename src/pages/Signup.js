@@ -53,7 +53,8 @@ function Signup() {
                     <label htmlFor='userid' className='col-sm-2 col-form-label fw-semibold'>아이디</label>
                     <div className='col-md-4 '>
                         <div className='input-group'>
-                            <input type='text' className='form-control' id='userid' name="id" value={userid} onChange={e => {setUserid(e.target.value); setIsAvailable(null);}} />
+                            <input type='text' className='form-control' id='userid' name="id" value={userid} onChange={event => {setUserid(event.target.value); setIsAvailable(null);}} 
+                                onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                             <button type="button" className='btn btn-outline-secondary' onClick={handleCheckId} disabled={!userid} style={{color: '#000000'}}>중복확인</button>
                         </div>
                     </div>
@@ -61,23 +62,26 @@ function Signup() {
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='password' className='col-sm-2 col-form-label fw-semibold'>비밀번호</label>
                     <div className='col-md-4'>
-                        <input type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} />
+                        <input type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={event => setPwd(event.target.value)}
+                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='nickname' className='col-sm-2 col-form-label fw-semibold'>닉네임</label>
                     <div className='col-md-4'>
-                        <input type='text' className='form-control' id='nickname' name="nickname" value={nickname} onChange={e => setNickname(e.target.value)} />
+                        <input type='text' className='form-control' id='nickname' name="nickname" value={nickname} onChange={event => setNickname(event.target.value)}
+                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='name' className='col-sm-2 col-form-label fw-semibold'>이름</label>
                     <div className='col-md-4'>
-                        <input type='text' className='form-control' id='name' name="name" value={name} onChange={e => setName(e.target.value)} />
+                        <input type='text' className='form-control' id='name' name="name" value={name} onChange={event => setName(event.target.value)}
+                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
                 <div className='d-grid gap-2 col-4 mt-4 mx-auto'>
-                    <input type="submit" className='btn btn-primary' value="회원가입" disabled={isAvailable !== true}></input>
+                    <input type="submit" className='btn btn-primary' value="회원가입" disabled={!userid.trim() || !pwd.trim() || !nickname.trim() || !name.trim() || isAvailable !== true}></input>
                 </div>
             </form>
         </div>

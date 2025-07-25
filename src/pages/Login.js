@@ -63,13 +63,15 @@ function Login({ setUserInfo }) {
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='userid' className='col-sm-2 col-form-label fw-semibold'>아이디</label>
                     <div className='col-md-4 '>
-                        <input type='text' className='form-control' id='userid' name="id" value={userid} onChange={e => {setUserid(e.target.value)}} />
+                        <input type='text' className='form-control' id='userid' name="id" value={userid} onChange={event => {setUserid(event.target.value)}}
+                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='password' className='col-sm-2 col-form-label fw-semibold'>비밀번호</label>
                     <div className='col-md-4'>
-                        <input type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={e => setPwd(e.target.value)} />
+                        <input type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={event => setPwd(event.target.value)}
+                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
                 <div className='d-grid gap-2 col-4 mt-4 mx-auto'>
