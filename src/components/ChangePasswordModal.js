@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from "react-bootstrap";
 
-function ChangePasswordModal({ show, onHide, userInfo, setUserInfo }) {
-    const [newUserInfo, setNewUserInfo] = useState(userInfo);
+function ChangePasswordModal({ show, onHide }) {
     const [newPwd, setNewPwd] = useState('');
     const [confirmPwd, setConfirmPwd] = useState('');
+
+    useEffect(() => {
+        if(show) {
+            setNewPwd('');
+            setConfirmPwd('');
+        }
+    }, [show])
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -12,8 +18,31 @@ function ChangePasswordModal({ show, onHide, userInfo, setUserInfo }) {
                 <Modal.Title>비밀번호 변경</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form onSubmit={event => {
+                <form onSubmit={async event => {
                     event.preventDefault();
+                    if(newPwd !== confirmPwd) {
+                        alert('비밀번호가 일치하지 않습니다!');
+                    }
+                    else {
+                        const response = await fetch('http://localhost:8080/api/update-password', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                newPassword: newPwd
+                            }),
+                        });
+                        const data = await response.json();
+                        if(response.ok) {
+                            alert(data.success);
+                            onHide();
+                        }
+                        else {
+                            alert(data.error);
+                        }
+                    }
                 }}>
                     <p>새 비밀번호: <input type="password" value={newPwd} onChange={event => {setNewPwd(event.target.value)}}
                         onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} /></p>

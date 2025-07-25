@@ -33,7 +33,7 @@ function Profile({ userInfo, setUserInfo }) {
         <p>아이디:  <span className="fw-semibold">{userInfo.userid}</span></p>
         <button className="btn btn-outline-primary mb-2" onClick={() => setShowModal1(true)}>회원정보 수정</button>
         <br />
-        <p><button className="btn btn-outline-primary mb-2" onClick={() => setShowModal2(true)} >비밀번호 변경</button></p>
+        <p><button className="btn btn-outline-success mb-2" onClick={() => setShowModal2(true)} >비밀번호 변경</button></p>
         <button type="button" onClick={ async () => {
             if(window.confirm("회원을 탈퇴하시겠습니까?")){
                 const response = await fetch('http://localhost:8080/api/delete', {
