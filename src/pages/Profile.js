@@ -27,7 +27,7 @@ function Profile({ userInfo, setUserInfo }) {
     if (!userInfo) 
         return <div>Loading...</div>
 
-    return <div>
+    return <div className='mt-5'>
         <p>닉네임: <span className="fw-semibold">{userInfo.nickname}</span></p>
         <p>이름:  <span className="fw-semibold">{userInfo.name}</span></p>
         <p>아이디:  <span className="fw-semibold">{userInfo.userid}</span></p>
