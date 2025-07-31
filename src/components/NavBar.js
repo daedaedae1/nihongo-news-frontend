@@ -26,7 +26,7 @@ function NavBar({ userInfo, setUserInfo }) {
           <ul className="navbar-nav">
             {userInfo? (
               <li className="nav-item">
-                <Link className="nav-link active" to="/bookMark">북마크</Link>
+                <Link className="nav-link active" to="/bookmark">북마크</Link>
               </li>
             ) : (
               <li></li>

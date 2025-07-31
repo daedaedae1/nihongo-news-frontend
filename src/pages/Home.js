@@ -19,10 +19,9 @@ function Home({ userInfo }) {
       {userInfo? (
         <>
           <h2 className="mb-4">NHK 최신 뉴스</h2>
-          <div className="row"></div>
-          <ul>
+          <div className="row">
             {newsList.map((news, idx) => (
-              <div className="col-md-8 mb-4" key={idx}>
+              <div className="col-md-6 mb-4" key={idx}>
                 <div className="card shadow-sm h-100">
                   <div className="row g-0">
                     <div className="col-4">
@@ -50,8 +49,9 @@ function Home({ userInfo }) {
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify(news)
                             });
-                            if (response.ok) alert('저장 완료!');
-                            else alert('저장 실패!');
+                            const data = await response.json();
+                            if (response.ok) alert(data.success);
+                            else alert(data.error);
                           }}
                         >북마크</button>
                       </div>
@@ -60,7 +60,7 @@ function Home({ userInfo }) {
                 </div>
               </div>
             ))}
-          </ul>
+            </div>
           <button className="btn btn-outline-success mb-2" onClick={event => {
             event.preventDefault();
             fetchNewsList();

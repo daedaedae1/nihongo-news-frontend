@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
+import Bookmark from './pages/Bookmark';
 
 import NavBar from './components/NavBar';
 
@@ -31,6 +32,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Home userInfo={userInfo} />} />
+          <Route path="/bookmark" element={<Bookmark />} />
           <Route path="/login" element={<Login setUserInfo={setUserInfo} />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} setUserInfo={setUserInfo} />} />
