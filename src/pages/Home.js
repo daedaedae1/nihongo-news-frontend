@@ -18,31 +18,47 @@ function Home({ userInfo }) {
     <div className='mt-5'>
       {userInfo? (
         <>
+          <h2 className="mb-4">NHK 최신 뉴스</h2>
+          <div className="row"></div>
           <ul>
             {newsList.map((news, idx) => (
-              <li key={idx}>
-                <h3>{news.title}</h3>
-                <a href={news.url} target="_blank" rel="noopener noreferrer">{news.url}</a><br />
-                <img src={news.image} alt={news.title} width={100} /><br />
-                <span>{news.date}</span>
-                <button onClick={async event => {
-                  event.preventDefault();
-                  const response = await fetch('http://localhost:8080/api/news/save', {
-                  method: 'POST',
-                  credentials: 'include',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(newsList[idx])
-                });
-                if (response.ok) {
-                    alert('ok');
-                } else {
-                    alert('no k');
-                }
-
-                }}>저장입니다</button>
-              </li>
+              <div className="col-md-8 mb-4" key={idx}>
+                <div className="card shadow-sm h-100">
+                  <div className="row g-0">
+                    <div className="col-4">
+                      <img
+                        src={news.image}
+                        alt={news.title}
+                        className="img-fluid rounded-start"
+                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                      />
+                    </div>
+                    <div className="col-8">
+                      <div className="card-body d-flex flex-column justify-content-between h-100">
+                        <h5 className="card-title mb-2">{news.title}</h5>
+                        <p className="card-text mb-1"><small className="text-muted">{news.date}</small></p>
+                        <a href={news.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm mb-2">
+                          기사 보러가기
+                        </a>
+                        <button
+                          className="btn btn-outline-success btn-sm"
+                          onClick={async event => {
+                            event.preventDefault();
+                            const response = await fetch('http://localhost:8080/api/bookmark/save', {
+                              method: 'POST',
+                              credentials: 'include',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(news)
+                            });
+                            if (response.ok) alert('저장 완료!');
+                            else alert('저장 실패!');
+                          }}
+                        >북마크</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </ul>
           <button className="btn btn-outline-success mb-2" onClick={event => {

@@ -23,6 +23,15 @@ function NavBar({ userInfo, setUserInfo }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse " id="navbarNav">
+          <ul className="navbar-nav">
+            {userInfo? (
+              <li className="nav-item">
+                <Link className="nav-link active" to="/bookMark">북마크</Link>
+              </li>
+            ) : (
+              <li></li>
+            )}
+          </ul>
           <ul className="navbar-nav ms-auto">
             {userInfo? (
               <>
@@ -32,7 +41,7 @@ function NavBar({ userInfo, setUserInfo }) {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <button className="nav-link btn btn-link" style={{ cursor: "pointer "}} type="button"
+                  <button className="nav-link btn btn-link" style={{ cursor: "pointer"}} type="button"
                           onClick={handleLogout}>
                     <RiLogoutBoxLine size={20} title="로그아웃"/>
                   </button>
