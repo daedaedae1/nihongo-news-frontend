@@ -14,12 +14,17 @@ function Home({ userInfo }) {
   }
 
   useEffect(() => {
-    fetchNewsList();
-  }, []);
+    if (userInfo) {
+      fetchNewsList();
+    }
+    else {
+      setNewsList([]);
+    }
+  }, [userInfo]);
 
   return (
-    <div className='mt-5'>
-      {userInfo? (
+    <div className="mt-5">
+      {userInfo ? (
         <>
           <h2 className="mb-4">NHK 최신 뉴스</h2>
           <div className="row">
@@ -29,45 +34,62 @@ function Home({ userInfo }) {
                   <div className="row g-0">
                     <div className="col-4">
                       <img
-                        src={news.image}
-                        alt={news.title}
-                        className="img-fluid rounded-start"
-                        style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+                        src={news.image} alt={news.title} className="img-fluid rounded-start"
+                        style={{
+                          objectFit: "cover",
+                          height: "100%",
+                          width: "100%",
+                        }}
                       />
                     </div>
                     <div className="col-8">
                       <div className="card-body d-flex flex-column justify-content-between h-100">
                         <h5 className="card-title mb-2">{news.title}</h5>
-                        <p className="card-text mb-1"><small className="text-muted">{news.date}</small></p>
-                        <a href={news.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm mb-2">
-                          기사 보러가기
-                        </a>
-                        <button
-                          className="btn btn-outline-success btn-sm"
-                          onClick={async event => {
-                            event.preventDefault();
-                            const response = await fetch('http://localhost:8080/api/bookmark/save', {
-                              method: 'POST',
-                              credentials: 'include',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify(news)
-                            });
-                            const data = await response.json();
-                            if (response.ok) toast.success(data.success);
-                            else toast.error(data.error);
-                          }}
-                        >북마크</button>
+                        <p className="card-text mb-1">
+                          <small className="text-muted">{news.date}</small>
+                        </p>
+                        <div className="mb-2 d-grid">
+                          <button className="btn btn-primary btn-sm w-100">
+                            상세보기
+                          </button>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <a href={news.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline-warning btn-sm"
+                            style={{ flex: 1 }}
+                            >기사 보러가기</a>
+                          <button
+                            className="btn btn-outline-success btn-sm"
+                            style={{ flex: 1 }}
+                            onClick={async (event) => {
+                              event.preventDefault();
+                              const response = await fetch("http://localhost:8080/api/bookmark/save", {
+                                  method: "POST",
+                                  credentials: "include",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                  },
+                                  body: JSON.stringify(news),
+                                }
+                              );
+                              const data = await response.json();
+                              if (response.ok) toast.success(data.success);
+                              else toast.error(data.error);
+                            }}
+                          >북마크</button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-            </div>
-          <button className="btn btn-outline-success mb-2" onClick={event => {
-            event.preventDefault();
-            fetchNewsList();
-          }}>새로고침</button>
+          </div>
+          <button
+            className="btn btn-outline-success mb-2" onClick={(event) => {
+              event.preventDefault();
+              fetchNewsList();
+            }}
+          >새로고침</button>
         </>
       ) : (
         <>

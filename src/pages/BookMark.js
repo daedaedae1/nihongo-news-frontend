@@ -23,8 +23,8 @@ function Bookmark() {
       }, []);
 
     return (
-    <>
-        <h2 className="mb-4 mt-5">NHK 최신 뉴스</h2>
+        <>
+        <h2 className="mb-4 mt-5">북마크</h2>
           <div className="row">
             {bookmarkList.map((news, idx) => (
               <div className="col-md-6 mb-4" key={idx}>
