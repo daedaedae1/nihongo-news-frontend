@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Signup() {
 
@@ -16,11 +17,11 @@ function Signup() {
         const response = await fetch('http://localhost:8080/api/check-id?userid=' + encodeURIComponent(userid))
         const data = await response.json();
         if(response.ok) {
-            alert(data.success);
+            toast.success(data.success);
             setIsAvailable(true);
         }
         else {
-            alert(data.error);
+            toast.error(data.error);
             setIsAvailable(false);
         }
     }
@@ -43,10 +44,10 @@ function Signup() {
                 });
                 const messageData = await response.json();
                 if (response.ok) {
-                    alert(messageData.success);
+                    toast.success(messageData.success);
                     navigate('/login');
                 } else {
-                    alert(messageData.error);
+                    toast.error(messageData.error);
                 }
             }}>
                 <div className='row mb-3 justify-content-center'>

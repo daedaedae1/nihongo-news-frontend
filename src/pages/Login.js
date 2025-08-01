@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Login({ setUserInfo }) {
 
@@ -25,11 +26,11 @@ function Login({ setUserInfo }) {
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    alert(data.success);
+                    toast.success(data.success);
                     setUserInfo(data);
                     navigate('/');
                 } else {
-                    alert(data.error);
+                    toast.error(data.error);
                 }
             }}>
                 <div className='row mb-3 justify-content-center'>

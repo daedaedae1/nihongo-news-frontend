@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 function EditProfileModal({ show, onHide, userInfo, setUserInfo }) {
     const [newUserInfo, setNewUserInfo] = useState(userInfo);
@@ -24,11 +25,11 @@ function EditProfileModal({ show, onHide, userInfo, setUserInfo }) {
                     const data = await response.json();
                     if(response.ok) {
                         setUserInfo(newUserInfo);
-                        alert(data.success);
+                        toast.success(data.success);
                         onHide();
                     }
                     else{
-                        alert(data.error);
+                        toast.error(data.error);
                     }
                 }}>
                     <p>닉네임: <input type="text" value={newUserInfo.nickname ?? ""} onChange={event => {

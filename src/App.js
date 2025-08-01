@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 
 import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer position="bottom-center" autoClose={1500}/>
       <NavBar userInfo={userInfo} setUserInfo={setUserInfo}></NavBar>
       <div className="App">
         <Routes>

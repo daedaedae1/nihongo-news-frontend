@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 function Home({ userInfo }) {
 
@@ -8,6 +9,8 @@ function Home({ userInfo }) {
     const response = await fetch('http://localhost:8080/api/news/list');
     const data = await response.json(); 
     setNewsList(data);
+    if(!response.ok) toast.error('새로고침 실패');
+    else toast.success('새로운 뉴스를 불러왔습니다')
   }
 
   useEffect(() => {
@@ -50,8 +53,8 @@ function Home({ userInfo }) {
                               body: JSON.stringify(news)
                             });
                             const data = await response.json();
-                            if (response.ok) alert(data.success);
-                            else alert(data.error);
+                            if (response.ok) toast.success(data.success);
+                            else toast.error(data.error);
                           }}
                         >북마크</button>
                       </div>

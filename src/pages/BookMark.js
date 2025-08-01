@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 function Bookmark() {
 
@@ -13,7 +14,7 @@ function Bookmark() {
             setBookmarkList(data);
         }
         else {
-            alert('북마크 불러오기 실패');
+            toast.error('북마크 불러오기 실패');
         }
     }
 
@@ -56,10 +57,10 @@ function Bookmark() {
                             });
                             const data = await response.json();
                             if (response.ok) {
-                                alert(data.success);
+                                toast.success(data.success);
                                 fetchBookmarkList();
                             }
-                            else alert(data.error);
+                            else toast.error(data.error);
                           }}
                         >북마크 삭제</button>
                       </div>

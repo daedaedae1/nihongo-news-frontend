@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+
 import EditProfileModal from "../components/EditProfileModal";
 import ChangePasswordModal from "../components/ChangePasswordModal";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,12 +44,12 @@ function Profile({ userInfo, setUserInfo }) {
                 });
                 const data = await response.json();
                 if(response.ok) {
-                    alert(data.success);
+                    toast.success(data.success);
                     setUserInfo(null);
                     navigate('/');
                 }
                 else {
-                    alert(data.error);
+                    toast.error(data.error);
                 }
             }
         }}>회원탈퇴</button>

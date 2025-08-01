@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal } from "react-bootstrap";
+import { toast } from 'react-toastify';
 
 function ChangePasswordModal({ show, onHide }) {
     const [newPwd, setNewPwd] = useState('');
@@ -21,7 +22,7 @@ function ChangePasswordModal({ show, onHide }) {
                 <form onSubmit={async event => {
                     event.preventDefault();
                     if(newPwd !== confirmPwd) {
-                        alert('비밀번호가 일치하지 않습니다!');
+                        toast.error('비밀번호가 일치하지 않습니다!');
                     }
                     else {
                         const response = await fetch('http://localhost:8080/api/update-password', {
@@ -36,11 +37,11 @@ function ChangePasswordModal({ show, onHide }) {
                         });
                         const data = await response.json();
                         if(response.ok) {
-                            alert(data.success);
+                            toast.success(data.success);
                             onHide();
                         }
                         else {
-                            alert(data.error);
+                            toast.error(data.error);
                         }
                     }
                 }}>

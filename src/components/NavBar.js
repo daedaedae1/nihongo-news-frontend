@@ -1,18 +1,26 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { toast } from 'react-toastify';
 
 
 function NavBar({ userInfo, setUserInfo }) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch('http://localhost:8080/api/logout', {
+    const response = await fetch('http://localhost:8080/api/logout', {
       method: 'POST',
       credentials: 'include',
     });
-    setUserInfo(null);
-    navigate('/');
+
+    if(response.ok) {
+      setUserInfo(null);
+      toast.success('로그아웃 되었습니다');
+      navigate('/');
+    }
+    else {
+      toast.error('로그아웃 실패');
+    }
   }
 
   return (
