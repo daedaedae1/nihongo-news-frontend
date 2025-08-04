@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function Home({ userInfo }) {
+  const navigate = useNavigate();
 
   const [newsList, setNewsList] = useState([]);
 
@@ -49,7 +51,10 @@ function Home({ userInfo }) {
                           <small className="text-muted">{news.date}</small>
                         </p>
                         <div className="mb-2 d-grid">
-                          <button className="btn btn-primary btn-sm w-100">
+                          <button className="btn btn-primary btn-sm w-100" onClick={async event => {
+                            event.preventDefault();
+                            navigate('/news', { state: news });
+                          }}>
                             상세보기
                           </button>
                         </div>
@@ -58,8 +63,7 @@ function Home({ userInfo }) {
                             style={{ flex: 1 }}
                             >기사 보러가기</a>
                           <button
-                            className="btn btn-outline-success btn-sm"
-                            style={{ flex: 1 }}
+                            className="btn btn-outline-success btn-sm" style={{ flex: 1 }}
                             onClick={async (event) => {
                               event.preventDefault();
                               const response = await fetch("http://localhost:8080/api/bookmark/save", {

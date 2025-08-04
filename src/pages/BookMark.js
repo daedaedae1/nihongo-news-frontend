@@ -20,7 +20,7 @@ function Bookmark() {
 
     useEffect(() => {
         fetchBookmarkList();
-      }, []);
+    }, []);
 
     return (
         <>
