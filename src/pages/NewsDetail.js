@@ -65,6 +65,30 @@ function NewsDetail() {
             <button className="btn btn-primary mb-5" onClick={handleTranslate}>번역하기</button>
         </div>
     );
+//     {newsDetail.sections && newsDetail.sections.map((section, idx) => {
+//     // 콘솔로 원문과 번역 확인
+//     console.log("원문 body", idx, section.body);
+//     if (krDetail && krDetail.sections && krDetail.sections[idx]) {
+//         console.log("번역 body", idx, krDetail.sections[idx].body);
+//     }
+//     return (
+//         <div key={idx} style={{ marginBottom: "2rem" }}>
+//             <h5 style={{ color: "#367" }}>{section.title}</h5>
+//             <pre style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}>{section.body}</pre><br />
+
+//             {krDetail && krDetail.sections && krDetail.sections[idx] && (
+//                 <>
+//                     <h5 style={{ color: "#397" }}>{krDetail.sections[idx].title}</h5>
+//                     <pre style={{ whiteSpace: "pre-wrap", color: "#257" }}>
+//                         {krDetail.sections[idx].body}
+//                     </pre>
+//                 </>
+//             )}
+//             <hr />
+//         </div>
+//     )
+// })}
+
 }
 
 export default NewsDetail;
