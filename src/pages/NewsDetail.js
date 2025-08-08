@@ -6,7 +6,8 @@ function NewsDetail() {
     const location = useLocation();
     const news = location.state;
     const [newsDetail, setNewsDetail] = useState({});
-    const [krDetail, setKrDetail] = useState(null); // 전체 번역 결과
+    const [krDetail, setKrDetail] = useState(null); // 요약, 본문 번역
+    const [krTitle, setKrTitle] = useState("");     // 대제목 번역
 
     useEffect(() => {
         const fetchNewsDetail = async () => {
@@ -24,25 +25,44 @@ function NewsDetail() {
     }, [news.url]);
 
     const handleTranslate = async () => {
-        const response = await fetch("http://localhost:8080/api/translate", {
+        try {
+        // 요약, 본문 번역
+        const fullRes = await fetch("http://localhost:8080/api/gemini/translate/detail", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newsDetail),
         });
-        if (response.ok) {
-            setKrDetail(await response.json());
-        } else {
-            toast.error('번역 실패');
+        if (!fullRes.ok) throw new Error("본문 번역 실패");
+        const fullJson = await fullRes.json();
+        setKrDetail(fullJson);
+
+        // 제목 번역
+        const titleRes = await fetch("http://localhost:8080/api/gemini/translate/text", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: news.title }),
+        });
+        if (!titleRes.ok) throw new Error("제목 번역 실패");
+        const titleText = await titleRes.text();
+        setKrTitle(titleText);
+        } catch (e) {
+        console.error(e);
+        toast.error('번역 실패');
         }
-    }
+    };
 
     return (
-        <div>
-            <h2>{news.title}</h2>
-            <p>{news.date}</p>
+        <div style={{ fontSize: "1.1rem", lineHeight: "1.6" }} >
+            <h2 style={{ marginBottom: 4 }}>{news.title}</h2>
+            {krTitle && (
+                <h4 style={{ color: "#2a6", marginTop: 0 }}>{krTitle}</h4>
+            )}
+
+            <p className="text-muted">{news.date}</p>
             <img src={news.image} alt={news.title} className="img-fluid rounded" style={{ width: "30%" }} /><br /><br />
-            <p>{newsDetail.summary}</p>
-            <p style={{ color: "#257", marginTop: 0 }}>
+
+            <p className="fw-semibold">{newsDetail.summary}</p>
+            <p style={{ color: "#257", marginTop: 0 }} className="fw-semibold">
                 {krDetail && krDetail.summary}
             </p>
             <br /><br />
