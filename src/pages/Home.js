@@ -89,7 +89,7 @@ function Home({ userInfo }) {
             ))}
           </div>
           <button
-            className="btn btn-outline-success mb-2" onClick={(event) => {
+            className="btn btn-outline-success mb-5" onClick={(event) => {
               event.preventDefault();
               fetchNewsList();
             }}
