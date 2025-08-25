@@ -17,6 +17,10 @@ function NewsDetail() {
   const [popup, setPopup] = useState({ open: false, x: 0, y: 0, token: null });
   const containerRef = useRef(null);
 
+  // 단어(원형) → 한국어 캐시 & 로딩
+  const [koCache, setKoCache] = useState({});         // { lemmaJA: "한국어" }
+  const [koLoading, setKoLoading] = useState(false);
+
   const openPopup = (e, token) => {
     const rect = containerRef.current?.getBoundingClientRect();
     const x = e.clientX - (rect?.left ?? 0);
@@ -54,6 +58,39 @@ function NewsDetail() {
     });
     if (!response.ok) throw new Error('형태소 분석 실패');
     return response.json();
+  };
+
+  // 원형(없으면 표면형) 구하기
+  const lemmaOf = (t) => {
+    const surf = (t?.surface || "").trim();
+    const base = (t?.base || "").trim();
+    return base || surf;
+  };
+
+  // 원형 번역 가져오기 (캐시 사용)
+  const fetchKoForLemma = async (lemma) => {
+    if (!lemma) return "";
+    if (koCache[lemma]) return koCache[lemma];
+    setKoLoading(true);
+    try {
+      const res = await fetch("http://localhost:8080/api/deepl/ja2ko", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ text: lemma }),
+      });
+      if (!res.ok) throw new Error("단어 번역 실패");
+      const json = await res.json();
+      const ko = (json && (json.translated || json.ko)) ? (json.translated || json.ko) : "";
+      setKoCache(prev => ({ ...prev, [lemma]: ko }));
+      return ko;
+    } catch (e) {
+      console.error(e);
+      toast.error("단어 번역 실패");
+      return "";
+    } finally {
+      setKoLoading(false);
+    }
   };
 
   // 뉴스 불러오기
@@ -104,6 +141,15 @@ function NewsDetail() {
     })();
   }, [news.title, newsDetail.summary, newsDetail.sections]);
 
+  // 팝업이 열릴 때, 해당 토큰의 "원형" 번역을 미리 가져오기
+  useEffect(() => {
+    if (!popup.open || !popup.token) return;
+    const lemma = lemmaOf(popup.token);
+    if (!lemma) return;
+    if (koCache[lemma]) return;
+    fetchKoForLemma(lemma);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [popup.open, popup.token]);
 
   // 한글로 번역
   const handleTranslate = async () => {
@@ -174,6 +220,7 @@ function NewsDetail() {
       <p style={{ color: "#257", marginTop: 0 }} className="fw-semibold">
         {krDetail && krDetail.summary}
       </p>
+      <hr />
 
       {/* 본문 */}
       <br /><br />
@@ -223,7 +270,6 @@ function NewsDetail() {
       </div>
       ))}
 
-
       {/* 미니 팝업 */}
       {popup.open && popup.token && (
         <div
@@ -249,6 +295,29 @@ function NewsDetail() {
             읽기: {popup.token.reading || "-"}<br />
             원형: {popup.token.base || "-"}
           </div>
+
+          {/* 한국어 뜻 (원형 기준) */}
+          <div style={{ fontSize: 14, marginTop: 8 }}>
+            <div style={{ color: "#999", marginBottom: 2 }}>한국어 뜻</div>
+            {(() => {
+              const lemma = lemmaOf(popup.token);
+              const ko = koCache[lemma];
+              if (ko) {
+                const surface = (popup.token.surface || "").trim();
+                const base = (popup.token.base || "").trim();
+                const showLemmaBadge = base && base !== surface;
+                return (
+                  <span>
+                    {ko}
+                    {showLemmaBadge && <span style={{ color: "#999" }}> ({base} 원형)</span>}
+                  </span>
+                );
+              }
+              if (koLoading) return <em>불러오는 중…</em>;
+              return <span style={{ color: "#bbb" }}>단어 클릭 시 자동 번역됩니다</span>;
+            })()}
+          </div>
+
           <div style={{ textAlign: "right", marginTop: 8 }}>
             <button className="btn btn-sm btn-outline-secondary" onClick={closePopup}>닫기</button>
           </div>
