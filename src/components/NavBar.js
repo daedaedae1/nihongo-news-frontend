@@ -33,9 +33,11 @@ function NavBar({ userInfo, setUserInfo }) {
         <div className="collapse navbar-collapse " id="navbarNav">
           <ul className="navbar-nav">
             {userInfo? (
-              <li className="nav-item">
-                <Link className="nav-link active" to="/bookmark">북마크</Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link active" to="/bookmark">북마크</Link>
+                </li>
+              </>
             ) : (
               <li></li>
             )}
@@ -69,7 +71,6 @@ function NavBar({ userInfo, setUserInfo }) {
                 </li>
               </>
             )}
-
             {/* 추가 메뉴도 이런 식으로 */}
           </ul>
         </div>

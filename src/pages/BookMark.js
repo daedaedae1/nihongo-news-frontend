@@ -75,7 +75,6 @@ function Bookmark() {
                           }}
                         >북마크 삭제</button>
                         </div>
-                      
                     </div>
                   </div>
                 </div>

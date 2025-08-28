@@ -67,21 +67,65 @@ function NewsDetail() {
     return base || surf;
   };
 
-  // 원형 번역 가져오기 (캐시 사용)
-  const fetchKoForLemma = async (lemma) => {
+  // 유니크 원형 목록 수집
+  const gatherUniqueLemmaTokens = () => {
+    const uniq = new Map();
+    const push = (arr) => {
+      if (!arr) return;
+      for (const t of arr) {
+        const base = (t?.base || t?.surface || "").trim();
+        if (!base) continue;
+        if (!uniq.has(base)) uniq.set(base, { surface: t.surface, base, pos: t.pos, reading: t.reading });
+      }
+    };
+    if (titleTokens) push(titleTokens);
+    if (summaryTokens) push(summaryTokens);
+    for (const sec of sectionTokens || []) {
+      push(sec?.titleTokens);
+      push(sec?.bodyTokens);
+    }
+    return Array.from(uniq.values());
+  };
+
+  // 배치로 원형→한국어 미리 받아오기 (Gemini)
+  const prefetchLemmaKorean = async () => {
+    try {
+      const items = gatherUniqueLemmaTokens();
+      if (!items.length) return;
+      const res = await fetch("http://localhost:8080/api/gemini/translate/lemmas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(items), // JpToken 배열 그대로 전송
+      });
+      if (!res.ok) throw new Error("배치 레마 번역 실패");
+      const map = await res.json(); // { baseJA: "한국어" }
+      if (map && typeof map === 'object') {
+        setKoCache(prev => ({ ...prev, ...map }));
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("단어 번역(배치) 실패");
+    }
+  };
+
+  // 원형 번역 가져오기 (캐시 사용) — 단건 폴백
+  const fetchKoForLemma = async (lemma, pos) => {
     if (!lemma) return "";
     if (koCache[lemma]) return koCache[lemma];
     setKoLoading(true);
     try {
-      const res = await fetch("http://localhost:8080/api/deepl/ja2ko", {
+      // 단건일 때도 배치 엔드포인트 재사용
+      const payload = [{ surface: lemma, base: lemma, reading: "", pos: pos || "" }];
+      const res = await fetch("http://localhost:8080/api/gemini/translate/lemmas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ text: lemma }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("단어 번역 실패");
-      const json = await res.json();
-      const ko = (json && (json.translated || json.ko)) ? (json.translated || json.ko) : "";
+      const map = await res.json();
+      const ko = map?.[lemma] || "";
       setKoCache(prev => ({ ...prev, [lemma]: ko }));
       return ko;
     } catch (e) {
@@ -141,17 +185,21 @@ function NewsDetail() {
     })();
   }, [news.title, newsDetail.summary, newsDetail.sections]);
 
-  // 팝업이 열릴 때, 해당 토큰의 "원형" 번역을 미리 가져오기
+  // 토큰들이 준비되면 한 번만 선번역
+  useEffect(() => {
+    if (!titleTokens && !summaryTokens && !(sectionTokens && sectionTokens.length)) return;
+    prefetchLemmaKorean();
+  }, [titleTokens, summaryTokens, sectionTokens]);
+
+  // 팝업이 열릴 때, 해당 토큰의 "원형" 번역을 미리 가져오기 (폴백용)
   useEffect(() => {
     if (!popup.open || !popup.token) return;
     const lemma = lemmaOf(popup.token);
-    if (!lemma) return;
-    if (koCache[lemma]) return;
-    fetchKoForLemma(lemma);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!lemma || koCache[lemma]) return;
+    fetchKoForLemma(lemma, popup.token.pos);
   }, [popup.open, popup.token]);
 
-  // 한글로 번역
+  // 뉴스 전체 한글로 번역
   const handleTranslate = async () => {
     try {
       toast.success("번역 중입니다.");
@@ -188,7 +236,6 @@ function NewsDetail() {
           className="jp-token"
           onClick={(e) => openPopup(e, t)}
           style={{
-            // padding: "0 2px",
             borderRadius: 4,
             cursor: "pointer",
             background: posBg(t.pos),
@@ -235,7 +282,6 @@ function NewsDetail() {
                   className="jp-token"
                   onClick={(e) => openPopup(e, t)}
                   style={{
-                    // padding: "0 2px",
                     borderRadius: 4,
                     cursor: "pointer",
                     background: posBg(t.pos),

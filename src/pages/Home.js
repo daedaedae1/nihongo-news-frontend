@@ -28,7 +28,7 @@ function Home({ userInfo }) {
     <div className="mt-5">
       {userInfo ? (
         <>
-          <h2 className="mb-4">NHK 최신 뉴스</h2>
+          <h2 className="mb-4">NHK 탑 뉴스</h2>
           <div className="row">
             {newsList.map((news, idx) => (
               <div className="col-md-6 mb-4" key={idx}>
