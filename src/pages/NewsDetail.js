@@ -47,6 +47,14 @@ function NewsDetail() {
     return "transparent";
   };
 
+  // 원형 읽기 우선 저장: 다르면 baseReading, 같으면 reading
+  const readingToStore = (t) => {
+    const r  = (t?.reading || "").trim();
+    const br = (t?.baseReading || "").trim(); // 원형의 읽기
+    if (br && br !== r) return br;
+    return r;
+  };
+
   // 토큰화 함수
   const analyzeText = async (text) => {
     if (!text || !text.trim()) return [];
@@ -188,9 +196,10 @@ function NewsDetail() {
   );
 
   const handleSaveClick = async () => {
-    const lemma = lemmaOf(popup.token);
-    const reading = popup.token?.reading || "";
-    const ko = koCache[lemma] || "";
+    if (!popup?.token) return;
+    const lemma   = lemmaOf(popup.token);               // 원형(없으면 표면형)
+    const reading = readingToStore(popup.token);        // ← 여기서 선택된 읽기
+    const ko      = koCache[lemma] || "";
 
     try {
       const res = await fetch("http://localhost:8080/api/wordbook/save", {
