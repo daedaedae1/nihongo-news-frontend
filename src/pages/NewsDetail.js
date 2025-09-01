@@ -137,6 +137,82 @@ function NewsDetail() {
     }
   };
 
+  // 뉴스 전체 한글로 번역
+  const handleTranslate = async () => {
+    try {
+      toast.success("번역 중입니다.");
+      // 본문 번역
+      const fullRes = await fetch("http://localhost:8080/api/gemini/translate/detail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newsDetail),
+      });
+      if (!fullRes.ok) throw new Error("본문 번역 실패");
+      const fullJson = await fullRes.json();
+      setKrDetail(fullJson);
+      // 대제목 번역
+      const titleRes = await fetch("http://localhost:8080/api/gemini/translate/text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: news.title }),
+      });
+      if (!titleRes.ok) throw new Error("제목 번역 실패");
+      const titleText = await titleRes.text();
+      setKrTitle(titleText);
+    } catch (e) {
+      console.error(e);
+      toast.error('번역 실패');
+    }
+  };
+
+  // 토큰 렌더러
+  const renderTokens = (tokens) => (
+    <span style={{ fontSize: "1.05rem", lineHeight: 1.8 }}>
+      {tokens.map((t, i) => (
+        <span
+          key={i}
+          className="jp-token"
+          onClick={(e) => openPopup(e, t)}
+          style={{
+            fontSize: 19,
+            borderRadius: 4,
+            cursor: "pointer",
+            background: posBg(t.pos),
+          }}
+          title={t.reading || t.base}
+        >
+          {t.surface}
+        </span>
+      ))}
+    </span>
+  );
+
+  const handleSaveClick = async () => {
+    const lemma = lemmaOf(popup.token);
+    const reading = popup.token?.reading || "";
+    const ko = koCache[lemma] || "";
+
+    try {
+      const res = await fetch("http://localhost:8080/api/wordbook/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          jpWord: lemma,
+          jpReading: reading,
+          krWord: ko
+        })
+      });
+      const data = await res.json();
+      if (res.ok) toast.success(data.success);
+      else toast.error(data.error);
+    } catch (e) {
+        console.error(e);
+        toast.error("네트워크 에러");
+    }
+
+  }
+
   // 뉴스 불러오기
   useEffect(() => {
     (async () => {
@@ -189,6 +265,7 @@ function NewsDetail() {
   useEffect(() => {
     if (!titleTokens && !summaryTokens && !(sectionTokens && sectionTokens.length)) return;
     prefetchLemmaKorean();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [titleTokens, summaryTokens, sectionTokens]);
 
   // 팝업이 열릴 때, 해당 토큰의 "원형" 번역을 미리 가져오기 (폴백용)
@@ -197,56 +274,8 @@ function NewsDetail() {
     const lemma = lemmaOf(popup.token);
     if (!lemma || koCache[lemma]) return;
     fetchKoForLemma(lemma, popup.token.pos);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [popup.open, popup.token]);
-
-  // 뉴스 전체 한글로 번역
-  const handleTranslate = async () => {
-    try {
-      toast.success("번역 중입니다.");
-      // 본문 번역
-      const fullRes = await fetch("http://localhost:8080/api/gemini/translate/detail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newsDetail),
-      });
-      if (!fullRes.ok) throw new Error("본문 번역 실패");
-      const fullJson = await fullRes.json();
-      setKrDetail(fullJson);
-      // 대제목 번역
-      const titleRes = await fetch("http://localhost:8080/api/gemini/translate/text", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: news.title }),
-      });
-      if (!titleRes.ok) throw new Error("제목 번역 실패");
-      const titleText = await titleRes.text();
-      setKrTitle(titleText);
-    } catch (e) {
-      console.error(e);
-      toast.error('번역 실패');
-    }
-  };
-
-  // 토큰 렌더러
-  const renderTokens = (tokens) => (
-    <span style={{ fontSize: "1.05rem", lineHeight: 1.8 }}>
-      {tokens.map((t, i) => (
-        <span
-          key={i}
-          className="jp-token"
-          onClick={(e) => openPopup(e, t)}
-          style={{
-            borderRadius: 4,
-            cursor: "pointer",
-            background: posBg(t.pos),
-          }}
-          title={t.reading || t.base}
-        >
-          {t.surface}
-        </span>
-      ))}
-    </span>
-  );
 
   return (
     <div ref={containerRef} style={{ fontSize: "1.1rem", lineHeight: "1.6", position: "relative" }}>
@@ -363,8 +392,9 @@ function NewsDetail() {
               return <span style={{ color: "#bbb" }}>단어 클릭 시 자동 번역됩니다</span>;
             })()}
           </div>
-
-          <div style={{ textAlign: "right", marginTop: 8 }}>
+          
+          <div className="d-flex justify-content-end gap-2 mt-2">
+            <button className="btn btn-sm btn-outline-success" onClick={handleSaveClick}>저장</button>
             <button className="btn btn-sm btn-outline-secondary" onClick={closePopup}>닫기</button>
           </div>
         </div>
@@ -375,8 +405,28 @@ function NewsDetail() {
         <div onClick={closePopup} style={{ position: "fixed", inset: 0, zIndex: 5 }} />
       )}
 
-      {/* 번역 버튼 */}
-      <button className="btn btn-primary mb-5" onClick={handleTranslate}>번역하기</button>
+      <div className="d-flex flex-column align-items-center gap-3 my-4">
+        {/* 번역 버튼 */}
+        <button className="btn btn-primary" onClick={handleTranslate}>번역하기</button>
+        <button
+          className="btn btn-outline-success" style={{ flex: 1 }}
+          onClick={async (event) => {
+            event.preventDefault();
+            const response = await fetch("http://localhost:8080/api/bookmark/save", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(news),
+              }
+            );
+            const data = await response.json();
+            if (response.ok) toast.success(data.success);
+            else toast.error(data.error);
+          }}
+        >북마크</button>
+      </div>
     </div>
   );
 }

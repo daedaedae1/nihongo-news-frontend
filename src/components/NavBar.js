@@ -37,6 +37,9 @@ function NavBar({ userInfo, setUserInfo }) {
                 <li className="nav-item">
                   <Link className="nav-link active" to="/bookmark">북마크</Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link active" to="/wordbook">단어</Link>
+                </li>
               </>
             ) : (
               <li></li>
