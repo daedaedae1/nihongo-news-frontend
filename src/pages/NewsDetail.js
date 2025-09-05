@@ -292,7 +292,12 @@ function NewsDetail() {
       <h4 style={{ marginBottom: 4 }}>
         {titleTokens ? renderTokens(titleTokens) : news.title}
       </h4>
-      {krTitle && <h4 style={{ color: "#2a6", marginTop: 0 }}>{krTitle}</h4>}
+      {/* 대제목(한국어 번역) */}
+      {krTitle && (
+        <h4 style={{ color: "#2a6", marginTop: 0, fontSize: "1.35rem" }}>
+          {krTitle}
+        </h4>
+      )}
 
       <p className="text-muted">{news.date}</p>
       <img src={news.image} alt={news.title} className="img-fluid rounded" style={{ width: "30%" }} /><br /><br />
@@ -301,8 +306,8 @@ function NewsDetail() {
       <p className="fw-semibold">
         {summaryTokens ? renderTokens(summaryTokens) : newsDetail.summary}
       </p>
-
-      <p style={{ color: "#257", marginTop: 0 }} className="fw-semibold">
+      {/* 요약(한국어 번역) */}
+      <p style={{ color: "#257", marginTop: 0, fontSize: "1.1rem" }} className="fw-semibold">
         {krDetail && krDetail.summary}
       </p>
       <hr />
@@ -341,14 +346,16 @@ function NewsDetail() {
               {section.body}
             </pre>
           }
-
+          {/* 본문 섹션(한국어 번역) */}
           {krDetail && krDetail.sections && krDetail.sections[idx] && (
-          <>
-              <h5 style={{ color: "#397" }}>{krDetail.sections[idx].title}</h5>
-              <pre style={{ whiteSpace: "pre-wrap", color: "#257" }}>
-              {krDetail.sections[idx].body}
+            <>
+              <h5 style={{ color: "#397", fontSize: "1.2rem" }}>
+                {krDetail.sections[idx].title}
+              </h5>
+              <pre style={{ whiteSpace: "pre-wrap", color: "#257", fontSize: "1.1rem", lineHeight: 1.9 }}>
+                {krDetail.sections[idx].body}
               </pre>
-          </>
+            </>
           )}
           <hr />
       </div>

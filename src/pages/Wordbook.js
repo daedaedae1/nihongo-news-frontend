@@ -61,31 +61,31 @@ function Wordbook() {
             {wordList.map((w, i) => (
               <Fragment key={w.id ?? `${w.jpWord}-${i}`}>
                 <tr onClick={() => makeExSent(w.jpWord)} style={{ cursor: 'pointer' }}>
-                  <td className="fw-semibold">{w.jpWord}</td>
-                  <td>{w.jpReading || '-'}</td>
-                  <td>{w.krWord}</td>
+                    <td className="fw-semibold">{w.jpWord}</td>
+                    <td>{w.jpReading || '-'}</td>
+                    <td>{w.krWord}</td>
                 </tr>
 
                 {selectedWord === w.jpWord && (
-                  <tr>
-                    <td colSpan={3}>
-                      {loadingEx && <div className="text-muted">예문 생성 중…</div>}
-                      {!loadingEx && exSentence.length > 0 && (
-                        <ul className="mb-0">
-                          {exSentence.map((s, idx) => (
-                            <li key={idx} className="mb-1">
-                              <div className="fw-semibold">{s.ja}</div>
-                              <div className="">{s.jaRd}</div>
-                              <div className="text-muted">{s.ko}</div>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      {!loadingEx && exSentence.length === 0 && (
-                        <div className="text-muted">예문이 없습니다</div>
-                      )}
-                    </td>
-                  </tr>
+                    <tr>
+                        <td colSpan={3}>
+                        {loadingEx && <div className="text-muted">예문 생성 중…</div>}
+                        {!loadingEx && exSentence.length > 0 && (
+                            <ul className="mb-0">
+                            {exSentence.map((s, idx) => (
+                                <li key={idx} className="mb-1">
+                                <div className="fw-semibold">{s.ja}</div>
+                                <div className="">{s.jaRd}</div>
+                                <div className="text-muted">{s.ko}</div>
+                                </li>
+                            ))}
+                            </ul>
+                        )}
+                        {!loadingEx && exSentence.length === 0 && (
+                            <div className="text-muted">예문이 없습니다</div>
+                        )}
+                        </td>
+                    </tr>
                 )}
               </Fragment>
             ))}
