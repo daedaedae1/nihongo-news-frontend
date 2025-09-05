@@ -41,6 +41,35 @@ function Wordbook() {
     }
   };
 
+  const handleDelete = async (e, id, jpWord) => {
+    e.stopPropagation(); // 행 클릭으로 예문 펼치는 이벤트 막기
+
+    if (!window.confirm(`'${jpWord}' 단어를 삭제할까요?`)) return;
+
+    try {
+        const res = await fetch(`http://localhost:8080/api/wordbook/delete/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+        // 목록에서 제거
+        setWordList(prev => prev.filter(item => item.id !== id));
+        // 선택된 단어가 삭제된 경우, 하단 예문영역 정리
+        setSelectedWord(prev => (prev === jpWord ? null : prev));
+        setExSentence(prev => (selectedWord === jpWord ? [] : prev));
+
+        toast.success(data.success || '삭제되었습니다.');
+        } else {
+        toast.error(data.error || '삭제 실패');
+        }
+    } catch (err) {
+        console.error(err);
+        toast.error('네트워크 오류');
+    }
+    };
+
   useEffect(() => {
     fetchWordList();
   }, []);
@@ -52,44 +81,54 @@ function Wordbook() {
         <table className="table table-striped table-hover align-middle fs-5">
           <thead className="table-light">
             <tr>
-              <th style={{ width: '35%' }}>일본어</th>
-              <th style={{ width: '25%' }}>읽는 법</th>
-              <th style={{ width: '40%' }}>한국어 뜻</th>
+                <th style={{ width: '35%' }}>일본어</th>
+                <th style={{ width: '25%' }}>읽는 법</th>
+                <th style={{ width: '30%' }}>한국어 뜻</th>
+                <th style={{ width: '10%' }} className="text-end"></th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {wordList.map((w, i) => (
-              <Fragment key={w.id ?? `${w.jpWord}-${i}`}>
+                <Fragment key={w.id ?? `${w.jpWord}-${i}`}>
                 <tr onClick={() => makeExSent(w.jpWord)} style={{ cursor: 'pointer' }}>
                     <td className="fw-semibold">{w.jpWord}</td>
                     <td>{w.jpReading || '-'}</td>
                     <td>{w.krWord}</td>
+                    <td className="text-end">
+                    <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={(e) => handleDelete(e, w.id, w.jpWord)}
+                        title="삭제"
+                    >
+                        삭제
+                    </button>
+                    </td>
                 </tr>
 
                 {selectedWord === w.jpWord && (
                     <tr>
-                        <td colSpan={3}>
+                    <td colSpan={4}>
                         {loadingEx && <div className="text-muted">예문 생성 중…</div>}
                         {!loadingEx && exSentence.length > 0 && (
-                            <ul className="mb-0">
+                        <ul className="mb-0">
                             {exSentence.map((s, idx) => (
-                                <li key={idx} className="mb-1">
+                            <li key={idx} className="mb-1">
                                 <div className="fw-semibold">{s.ja}</div>
-                                <div className="">{s.jaRd}</div>
+                                <div>{s.jaRd}</div>
                                 <div className="text-muted">{s.ko}</div>
-                                </li>
+                            </li>
                             ))}
-                            </ul>
+                        </ul>
                         )}
                         {!loadingEx && exSentence.length === 0 && (
-                            <div className="text-muted">예문이 없습니다</div>
+                        <div className="text-muted">예문이 없습니다</div>
                         )}
-                        </td>
+                    </td>
                     </tr>
                 )}
-              </Fragment>
+                </Fragment>
             ))}
-          </tbody>
+            </tbody>
         </table>
       </div>
     </>
