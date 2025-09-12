@@ -263,11 +263,11 @@ function Wordbook() {
         </div>
 
         {filtered.length === 0 ? (
-            <div className="alert alert-light border">
+            <div className="alert alert-light ms-4 me-4 border">
             저장된 단어가 없거나 검색 결과가 없습니다.
             </div>
         ) : (
-            <div className="table-responsive">
+            <div className="table-responsive ms-4 me-4 border border-2">
             <table className="table table-striped table-hover align-middle fs-5">
                 <thead className="table-light">
                 <tr>
