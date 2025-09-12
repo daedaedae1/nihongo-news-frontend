@@ -9,17 +9,16 @@ function Home({ userInfo }) {
 
   const fetchNewsList = async () => {
     const response = await fetch('http://localhost:8080/api/news/list');
-    const data = await response.json(); 
+    const data = await response.json();
     setNewsList(data);
-    if(!response.ok) toast.error('새로고침 실패');
-    else toast.success('새로운 뉴스를 불러왔습니다')
-  }
+    if (!response.ok) toast.error('새로고침 실패');
+    else toast.success('새로운 뉴스를 불러왔습니다');
+  };
 
   useEffect(() => {
     if (userInfo) {
       fetchNewsList();
-    }
-    else {
+    } else {
       setNewsList([]);
     }
   }, [userInfo]);
@@ -27,21 +26,19 @@ function Home({ userInfo }) {
   return (
     <div className="mt-5">
       {userInfo ? (
-        <>
+        <div className="container">
           <h2 className="mb-4">NHK 탑 뉴스</h2>
           <div className="row">
             {newsList.map((news, idx) => (
               <div className="col-md-6 mb-4" key={idx}>
                 <div className="card shadow-sm h-100">
-                  <div className="row g-0">
+                  <div className="row g-0 h-100">
                     <div className="col-4">
                       <img
-                        src={news.image} alt={news.title} className="img-fluid rounded-start"
-                        style={{
-                          objectFit: "cover",
-                          height: "100%",
-                          width: "100%",
-                        }}
+                        src={news.image}
+                        alt={news.title}
+                        className="img-fluid rounded-start w-100 h-100"
+                        style={{ objectFit: 'cover', display: 'block' }}
                       />
                     </div>
                     <div className="col-8">
@@ -51,27 +48,37 @@ function Home({ userInfo }) {
                           <small className="text-muted">{news.date}</small>
                         </p>
                         <div className="mb-2 d-grid">
-                          <button className="btn btn-primary btn-sm w-100" onClick={async event => {
-                            event.preventDefault();
-                            navigate('/news', { state: news });
-                          }}>
+                          <button
+                            className="btn btn-primary btn-sm w-100"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              navigate('/news', { state: news });
+                            }}
+                          >
                             상세보기
                           </button>
                         </div>
                         <div className="d-flex gap-2">
-                          <a href={news.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline-warning btn-sm"
+                          <a
+                            href={news.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline-warning btn-sm"
                             style={{ flex: 1 }}
-                            >기사 보러가기</a>
+                          >
+                            기사 보러가기
+                          </a>
                           <button
-                            className="btn btn-outline-success btn-sm" style={{ flex: 1 }}
+                            className="btn btn-outline-success btn-sm"
+                            style={{ flex: 1 }}
                             onClick={async (event) => {
                               event.preventDefault();
-                              const response = await fetch("http://localhost:8080/api/bookmark/save", {
-                                  method: "POST",
-                                  credentials: "include",
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                  },
+                              const response = await fetch(
+                                'http://localhost:8080/api/bookmark/save',
+                                {
+                                  method: 'POST',
+                                  credentials: 'include',
+                                  headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify(news),
                                 }
                               );
@@ -79,7 +86,9 @@ function Home({ userInfo }) {
                               if (response.ok) toast.success(data.success);
                               else toast.error(data.error);
                             }}
-                          >북마크</button>
+                          >
+                            북마크
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -88,17 +97,21 @@ function Home({ userInfo }) {
               </div>
             ))}
           </div>
+
           <button
-            className="btn btn-outline-success mb-5" onClick={(event) => {
+            className="btn btn-outline-success mb-5"
+            onClick={(event) => {
               event.preventDefault();
               fetchNewsList();
             }}
-          >새로고침</button>
-        </>
+          >
+            새로고침
+          </button>
+        </div>
       ) : (
-        <>
+        <div className="container">
           <h1>홈입니다.</h1>
-        </>
+        </div>
       )}
     </div>
   );
