@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { IoHelpCircleOutline } from "react-icons/io5";
 import { toast } from 'react-toastify';
 
 
@@ -44,6 +45,11 @@ function NavBar({ userInfo, setUserInfo }) {
             ) : (
               <li></li>
             )}
+            <li className="nav-item">
+              <Link className="nav-link" to="/guide">
+                <IoHelpCircleOutline size={20} title="도움말" />
+              </Link>
+            </li>
           </ul>
           <ul className="navbar-nav ms-auto">
             {userInfo? (

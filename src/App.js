@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Bookmark from './pages/Bookmark';
 import Wordbook from './pages/Wordbook';
+import Guide from './pages/Guide';
 import NewsDetail from './pages/NewsDetail';
 
 import NavBar from './components/NavBar';
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={<Home userInfo={userInfo} />} />
           <Route path="/bookmark" element={<Bookmark />} />
           <Route path="/wordbook" element={<Wordbook />} />
+          <Route path="/guide" element={<Guide userInfo={userInfo} />} />
           <Route path="/news" element={<NewsDetail />} />
           <Route path="/login" element={<Login setUserInfo={setUserInfo} />} />
           <Route path="/signup" element={<Signup />} />
