@@ -45,7 +45,7 @@
                     //     <div>
                     //         <strong>로그인이 필요합니다.</strong>
                     //         <div className="small mb-0">
-                    //         미로그인 상태에선 상세보기/북마크/단어 저장 기능이 비활성화됩니다.
+                    //         미로그인 상태에선 상세보기/북마크/단어 기능이 비활성화됩니다.
                     //         </div>
                     //     </div>
                     // </div>
@@ -54,7 +54,7 @@
                     <RiLoginCircleLine size={20} className="mt-1" /> 
                     <div> 
                         <strong>로그인이 필요합니다.</strong> 
-                        <div className="small mb-0"> 미로그인 상태에선 상세보기/북마크/단어 저장 기능이 비활성화됩니다. </div> 
+                        <div className="small mb-0"> 미로그인 상태에선 상세보기/북마크/단어 기능이 비활성화됩니다. </div> 
                     </div> 
                     </div>
                 )}
@@ -194,7 +194,7 @@
             <div className="d-flex flex-wrap gap-2 justify-content-center mt-4">
                 <Link className="btn btn-primary" to="/">
                 <RiNewspaperLine className="me-1" />
-                NHK 뉴스 보러가기
+                뉴스 보러가기
                 </Link>
                 {userInfo && (
                     <>

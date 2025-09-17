@@ -12,9 +12,10 @@ function Signup() {
     const [nickname, setNickname] = useState('');
 
     const [isAvailable, setIsAvailable] = useState(null);
+    const [isAvailable2, setIsAvailable2] = useState(null);
 
     const handleCheckId = async () => {
-        const response = await fetch('http://localhost:8080/api/check-id?userid=' + encodeURIComponent(userid))
+        const response = await fetch('http://localhost:8080/api/check-userid?userid=' + encodeURIComponent(userid))
         const data = await response.json();
         if(response.ok) {
             toast.success(data.success);
@@ -23,6 +24,19 @@ function Signup() {
         else {
             toast.error(data.error);
             setIsAvailable(false);
+        }
+    }
+
+    const handleCheckNickname = async () => {
+        const response = await fetch('http://localhost:8080/api/check-nickname?nickname=' + encodeURIComponent(nickname))
+        const data = await response.json();
+        if(response.ok) {
+            toast.success(data.success);
+            setIsAvailable2(true);
+        }
+        else {
+            toast.error(data.error);
+            setIsAvailable2(false);
         }
     }
 
@@ -70,8 +84,12 @@ function Signup() {
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='nickname' className='col-sm-2 col-form-label fw-semibold'>닉네임</label>
                     <div className='col-md-4'>
-                        <input type='text' className='form-control' id='nickname' name="nickname" value={nickname} onChange={event => setNickname(event.target.value)}
-                            onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
+                        <div className='input-group'>
+                            <input type='text' className='form-control' id='nickname' name="nickname" value={nickname} onChange={event => {setNickname(event.target.value); setIsAvailable2(null);}}
+                                onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
+                            <button type="button" className='btn btn-outline-secondary' onClick={handleCheckNickname} disabled={!nickname} style={{color: '#000000'}}>중복확인</button>
+                        </div>
+                        
                     </div>
                 </div>
                 <div className='row mb-3 justify-content-center'>
@@ -82,7 +100,7 @@ function Signup() {
                     </div>
                 </div>
                 <div className='d-grid gap-2 col-4 mt-4 mx-auto'>
-                    <input type="submit" className='btn btn-primary' value="회원가입" disabled={!userid.trim() || !pwd.trim() || !nickname.trim() || !name.trim() || isAvailable !== true}></input>
+                    <input type="submit" className='btn btn-primary' value="회원가입" disabled={!userid.trim() || !pwd.trim() || !nickname.trim() || !name.trim() || isAvailable !== true || isAvailable2 !== true}></input>
                 </div>
             </form>
         </div>
