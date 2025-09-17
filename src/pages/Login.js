@@ -2,6 +2,8 @@ import { useState, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import FindUseridModal from '../components/FindUseridModal';
+import FindPasswordModal from '../components/FindPasswordModal';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 
 function Login({ setUserInfo }) {
 
@@ -14,8 +16,10 @@ function Login({ setUserInfo }) {
     const [showModal2, setShowModal2] = useState(false);
 
     const pwdRef = useRef(null);    // 비밀번호 input 포커스용
-
     const [shouldFocusPwd, setShouldFocusPwd] = useState(false);
+
+    const [showChangePwd, setShowChangePwd] = useState(false);
+    const [openChangeAfterFind, setOpenChangeAfterFind] = useState(false);
 
     const handleFoundUserid = (uid) => {    // 모달에서 받은 아이디 처리
         setUserid(uid);
@@ -27,6 +31,20 @@ function Login({ setUserInfo }) {
         if (shouldFocusPwd) {
         pwdRef.current?.focus();
         setShouldFocusPwd(false);
+        }
+    };
+
+    // FindPasswordModal에서 성공시 호출됨
+    const handleFindVerified = () => {
+        setOpenChangeAfterFind(true);  // 다음 모달 열 준비
+        setShowModal2(false);         // 먼저 닫기
+    };
+
+    // FindPasswordModal이 완전히 닫힌 뒤 호출됨
+    const handleFindExited = () => {
+        if (openChangeAfterFind) {
+        setShowChangePwd(true);      // 비밀번호 변경 모달 열기
+        setOpenChangeAfterFind(false);
         }
     };
 
@@ -74,15 +92,24 @@ function Login({ setUserInfo }) {
             </form>
             <br />
             <button className="btn btn-sm" type="button" onClick={() => setShowModal1(true)}>아이디 찾기</button>
-            <button className="btn btn-sm" onClick="">비밀번호 찾기</button>
+            <button className="btn btn-sm" type="button" onClick={() => setShowModal2(true)}>비밀번호 찾기</button>
 
             <FindUseridModal 
                 show={showModal1} 
                 onHide={() => setShowModal1(false)}
                 onFound={handleFoundUserid} // 콜백 전달
                 onExited={handleModalExited}
-             />
-
+            />
+            <FindPasswordModal 
+                show={showModal2}
+                onHide={() => setShowModal2(false)}
+                onVerified={handleFindVerified}
+                onExited={handleFindExited}
+            />
+            <ChangePasswordModal
+                show={showChangePwd}
+                onHide={() => setShowChangePwd(false)}
+            />
         </div>
     );
 }
