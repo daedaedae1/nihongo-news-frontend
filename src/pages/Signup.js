@@ -70,7 +70,7 @@ function Signup() {
                         <div className='input-group'>
                             <input type='text' className='form-control' id='userid' name="id" value={userid} onChange={event => {setUserid(event.target.value); setIsAvailable(null);}} 
                                 onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
-                            <button type="button" className='btn btn-outline-secondary' onClick={handleCheckId} disabled={!userid} style={{color: '#000000'}}>중복확인</button>
+                            <button type="button" className='btn btn-outline-secondary' onClick={handleCheckId} disabled={!userid?.trim()} style={{color: '#000000'}}>중복확인</button>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@ function Signup() {
                         <div className='input-group'>
                             <input type='text' className='form-control' id='nickname' name="nickname" value={nickname} onChange={event => {setNickname(event.target.value); setIsAvailable2(null);}}
                                 onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
-                            <button type="button" className='btn btn-outline-secondary' onClick={handleCheckNickname} disabled={!nickname} style={{color: '#000000'}}>중복확인</button>
+                            <button type="button" className='btn btn-outline-secondary' onClick={handleCheckNickname} disabled={!nickname?.trim()} style={{color: '#000000'}}>중복확인</button>
                         </div>
                         
                     </div>

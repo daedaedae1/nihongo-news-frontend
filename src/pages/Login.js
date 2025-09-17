@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import FindUseridModal from '../components/FindUseridModal';
 
 function Login({ setUserInfo }) {
 
@@ -8,6 +9,26 @@ function Login({ setUserInfo }) {
 
     const [userid, setUserid] = useState('');
     const [pwd, setPwd] = useState('');
+
+    const [showModal1, setShowModal1] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
+
+    const pwdRef = useRef(null);    // 비밀번호 input 포커스용
+
+    const [shouldFocusPwd, setShouldFocusPwd] = useState(false);
+
+    const handleFoundUserid = (uid) => {    // 모달에서 받은 아이디 처리
+        setUserid(uid);
+        setShouldFocusPwd(true);     // 모달 닫힌 뒤 포커스할지 표시
+        setShowModal1(false);        // 모달 닫기
+    };
+
+    const handleModalExited = () => {   // 비밀번호 포커스 (모달이 살라진 뒤 포커스 가능)
+        if (shouldFocusPwd) {
+        pwdRef.current?.focus();
+        setShouldFocusPwd(false);
+        }
+    };
 
     return (
         <div className='container mt-5 pt-5 pb-5' style={{backgroundColor: 'white'}}>
@@ -43,7 +64,7 @@ function Login({ setUserInfo }) {
                 <div className='row mb-3 justify-content-center'>
                     <label htmlFor='password' className='col-sm-2 col-form-label fw-semibold'>비밀번호</label>
                     <div className='col-md-4'>
-                        <input type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={event => setPwd(event.target.value)}
+                        <input ref={pwdRef} type='password' className='form-control' id='password' name="pwd" value={pwd} onChange={event => setPwd(event.target.value)}
                             onKeyDown={e => {if (e.key === ' ') {e.preventDefault();}}} />
                     </div>
                 </div>
@@ -51,6 +72,17 @@ function Login({ setUserInfo }) {
                     <input type="submit" className='btn btn-primary' value="로그인"></input>
                 </div>
             </form>
+            <br />
+            <button className="btn btn-sm" type="button" onClick={() => setShowModal1(true)}>아이디 찾기</button>
+            <button className="btn btn-sm" onClick="">비밀번호 찾기</button>
+
+            <FindUseridModal 
+                show={showModal1} 
+                onHide={() => setShowModal1(false)}
+                onFound={handleFoundUserid} // 콜백 전달
+                onExited={handleModalExited}
+             />
+
         </div>
     );
 }
