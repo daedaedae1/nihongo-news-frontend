@@ -31,7 +31,7 @@
                         <Link className="btn btn-outline-success" to="/bookmark">
                             <RiBookmarkLine className="me-1" /> 북마크
                         </Link>
-                        <Link className="btn btn-outline-secondary" to="/word">
+                        <Link className="btn btn-outline-secondary" to="/wordbook">
                             <RiBook2Line className="me-1" /> 단어장
                         </Link>
                         </>
@@ -201,7 +201,7 @@
                     <Link className="btn btn-outline-success" to="/bookmark">
                         <RiBookmarkLine className="me-1" /> 북마크
                     </Link>
-                    <Link className="btn btn-outline-secondary" to="/word">
+                    <Link className="btn btn-outline-secondary" to="/wordbook">
                         <RiBook2Line className="me-1" /> 단어장
                     </Link>
                     </>
